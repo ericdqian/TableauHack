@@ -3,7 +3,9 @@
 // Wrap everything in an anonymous function to avoid polluting the global namespace
 (function () {
   $(document).ready(function () {
+    makeYoutubePlayer();
     tableau.extensions.initializeAsync().then(function () {
+      makeYoutubePlayer();
       // Since dataSource info is attached to the worksheet, we will perform
       // one async call per worksheet to get every dataSource used in this
       // dashboard.  This demonstrates the use of Promise.all to combine
@@ -122,5 +124,50 @@
       refreshCell.appendChild(refreshButton);
       infoCell.appendChild(infoSpan);
     }
+  }
+
+  function makeYoutubePlayer () {
+          //Makes the youtube player
+      console.log("in makeyoutubeplaer");
+      // const YTPlayer = require('yt-player')
+      const player = $('player') 
+      // player = new YTPlayer('#player')
+      console.log('calling new yt player...');
+      newYTPlayer();
+ }
+ 
+  function newYTPlayer () {
+    var player = {
+        playVideo: function(container, videoId) {
+            if (typeof(YT) == 'undefined' || typeof(YT.Player) == 'undefined') {
+                window.onYouTubePlayerAPIReady = function() {
+                    player.loadPlayer(container, videoId);
+                };
+                $.getScript('//www.youtube.com/player_api');
+            } else {
+                player.loadPlayer(container, videoId);
+            }
+        },
+        loadPlayer: function(container, videoId) {
+            window.myPlayer = new YT.Player(container, {
+                playerVars: {
+                    modestbranding: 1,
+                    rel: 0,
+                    showinfo: 0,
+                    autoplay: 1
+                },
+                height: 200,
+                width: 200,
+                videoId: videoId,
+                events: {
+                    // 'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+    };
+
+    var containerId = 'player';
+    var videoId = 'GKSRyLdjsPA';
+    player.playVideo(containerId, videoId);
   }
 })();
